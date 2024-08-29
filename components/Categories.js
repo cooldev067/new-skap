@@ -12,7 +12,7 @@ const Categories = () => {
           <Link href={"/stickers/new-stickers"}>Stickers</Link>
         </li>
         <li>
-          <Link href={"/mugs-cups/mugs-and-cups"}>Mugs & Cups</Link>
+          <Link href={"/mugs-n-cups/mugs-and-cups"}>Mugs & Cups</Link>
         </li>
         <li>
           <Link href={"/bottles/new-bottles"}>Bottles</Link>

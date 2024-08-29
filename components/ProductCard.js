@@ -50,7 +50,7 @@ const ProductCard = () => {
                     width={600}
                     height={600}
                     src={product.Image}
-                    className="h-72 rounded-t-lg"
+                    className="h-72 object-contain rounded-t-lg"
                     alt={product.Title}
                   />
                 </figure>
