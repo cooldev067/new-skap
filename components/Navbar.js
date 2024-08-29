@@ -56,7 +56,7 @@ const Navbar = () => {
         <div className="navbar-center">
           <Link href={"/"}>
             <Image
-              src={"/images/logo.png"}
+              src={"/Images/logo.png"}
               width={400}
               height={400}
               className="w-24"
