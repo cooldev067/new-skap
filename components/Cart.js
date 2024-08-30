@@ -9,9 +9,12 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useDialog } from "@/context/Context";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
-  const { open, setOpen, cart, setCart, removeFromCart } = useDialog();
+  const { open, setOpen, cart, setCart } = useDialog();
+
+  const router = useRouter();
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart"));
@@ -22,6 +25,21 @@ export default function Cart() {
 
   const handleRemove = (id) => {
     const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  const handleQuantityChange = (id, change) => {
+    const updatedCart = cart.map((item) => {
+      if (item.id === id) {
+        const newQuantity = item.quantity + change;
+        return {
+          ...item,
+          quantity: Math.max(newQuantity, 1), // Ensure quantity is at least 1
+        };
+      }
+      return item;
+    });
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
@@ -38,6 +56,7 @@ export default function Cart() {
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
+
 
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
@@ -96,14 +115,33 @@ export default function Cart() {
                                   </h3>
                                   <p className="ml-4">{product.price}</p>
                                 </div>
-                                <p className="mt-1 text-sm text-gray-500">
-                                  {product.color}
-                                </p>
                               </div>
+
                               <div className="flex flex-1 items-end justify-between text-sm">
-                                <p className="text-gray-500">
-                                  Qty {product.quantity}
-                                </p>
+                                <div className="flex items-center">
+                                  <button
+                                    onClick={() =>
+                                      handleQuantityChange(product.id, -1)
+                                    }
+                                    disabled={product.quantity <= 1}
+                                    type="button"
+                                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                                  >
+                                    -
+                                  </button>
+                                  <p className="mx-2 text-gray-500">
+                                    Qty {product.quantity}
+                                  </p>
+                                  <button
+                                    onClick={() =>
+                                      handleQuantityChange(product.id, 1)
+                                    }
+                                    type="button"
+                                    className="font-medium text-indigo-600 hover:text-indigo-500"
+                                  >
+                                    +
+                                  </button>
+                                </div>
 
                                 <div className="flex">
                                   <button
@@ -134,12 +172,11 @@ export default function Cart() {
                     Shipping and taxes calculated at checkout.
                   </p>
                   <div className="mt-6">
-                    <a
-                      href="#"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                    <button
+                      className="flex items-center w-full justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                     >
                       Checkout
-                    </a>
+                    </button>
                   </div>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                     <p>

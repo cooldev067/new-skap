@@ -12,14 +12,18 @@ export function DialogProvider({ children }) {
   const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
-    const existingProduct = cart.find((item) => item.id === product.id);
+    setCart((prevCart) => {
+      console.log("Previous Cart:", prevCart);
+      const isProductInCart = prevCart.some((item) => item.id === product.id);
 
-    if (!existingProduct) {
-      // Add product to cart if it doesn't exist already
-      setCart((prevCart) => [...prevCart, product]);
-    } else {
-      console.log("Product already in the cart");
-    }
+      if (isProductInCart) {
+        console.log("Product is already in the cart");
+        return prevCart;
+      }
+
+      console.log("Adding Product to Cart:", product); // Debug statement
+      return [...prevCart, product];
+    });
   };
 
   const removeFromCart = (id) => {
